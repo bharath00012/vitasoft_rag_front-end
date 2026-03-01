@@ -1,71 +1,165 @@
-# Getting Started with Create React App
+# RAG Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A **React + TypeScript** chat interface for a Retrieval-Augmented Generation (RAG) system.  
+Upload documents, ask natural-language questions, and receive AI-generated answers grounded in your content.
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Table of Contents
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- [Setup Instructions](#setup-instructions)
+- [Architecture Overview](#architecture-overview)
+- [Retrieval Flow](#retrieval-flow)
+- [Third-Party Packages](#third-party-packages)
+- [Known Limitations / Future Improvements](#known-limitations--future-improvements)
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Setup Instructions
 
-### `npm run build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Tool    | Version |
+| ------- | ------- |
+| Node.js | ≥ 16    |
+| npm     | ≥ 8     |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+> **Note:** The frontend expects a backend API running at `http://localhost:5000`. Make sure the RAG backend server is up before using the app.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation & Run
 
-### `npm run eject`
+```bash
+# 1. Clone the repository and navigate to the frontend directory
+cd rag-frontend
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# 2. Install dependencies
+npm install
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# 3. Start the development server (opens http://localhost:3000)
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Available Scripts
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+| Command           | Description                                       |
+| ----------------- | ------------------------------------------------- |
+| `npm start`       | Runs the app in development mode on port 3000     |
+| `npm test`        | Launches the test runner in interactive watch mode |
+| `npm run build`   | Creates an optimised production build in `build/`  |
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Architecture Overview
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The application follows a **component-based architecture** built with Create React App and TypeScript.
 
-### Code Splitting
+```
+rag-frontend/
+├── public/                    # Static assets (index.html, favicon, etc.)
+├── src/
+│   ├── components/
+│   │   ├── ChatWindow.tsx     # Main chat UI – messages, upload, send
+│   │   ├── Sidebar.tsx        # Session list & new-chat button
+│   │   └── RagConfigModal.tsx # Modal to tune RAG parameters at runtime
+│   ├── services/
+│   │   └── api.ts             # Axios HTTP client – all backend API calls
+│   ├── App.tsx                # Root component – layout, session management
+│   ├── index.tsx              # React DOM entry point
+│   ├── index.css              # Global styles & custom animations
+│   └── App.css                # App-level styles
+├── tailwind.config.js         # TailwindCSS configuration (neon theme)
+├── tsconfig.json              # TypeScript compiler options
+└── package.json               # Dependencies & scripts
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Component Responsibilities
 
-### Analyzing the Bundle Size
+| Component              | Role |
+| ---------------------- | ---- |
+| **App.tsx**            | Top-level layout. Manages sessions, active session state, and renders Sidebar + ChatWindow. Persists the active session in `localStorage`. |
+| **Sidebar.tsx**        | Displays all chat sessions; lets the user create new sessions or delete existing ones. |
+| **ChatWindow.tsx**     | Core chat panel – sending messages, receiving bot responses, uploading documents, deleting history, and displaying relevance scores & response times. |
+| **RagConfigModal.tsx** | Settings modal to adjust RAG parameters (chunk size, overlap, thresholds, top-K) at runtime. |
+| **api.ts**             | Centralised Axios instance (`http://localhost:5000`). Exports functions for every backend endpoint. |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### RAG Settings Modal
 
-### Making a Progressive Web App
+![RAG Settings](docs/rag_settings_modal.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Users can fine-tune retrieval parameters at any time via the **⚙ RAG Settings** button without restarting the server.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+### Step-by-step Detail
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+1. **Document Upload** – The user clicks **"+ Upload"** in the ChatWindow header. The file is sent via `POST /upload` as multipart form data. On success, the UI displays the filename, upload date, and the total number of chunks generated after embedding.
 
-### `npm run build` fails to minify
+2. **Asking a Question** – The user types a question and presses **Enter** (or clicks **Send**). The message is appended to the local chat state immediately (optimistic UI), and a request is fired to `POST /query` with the `sessionId` and `question`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-"# vitasoft_rag_front-end11" 
+3. **Backend Retrieval + Generation** – The backend embeds the question, retrieves the most relevant document chunks from its vector store (governed by the RAG config parameters), and passes them as context to an LLM to generate an answer. The response includes the `answer` text and a relevance `score`.
+
+4. **Response Display** – The frontend calculates the round-trip response time, then renders the bot's reply bubble showing the answer, score, response time, and timestamp.
+
+5. **RAG Configuration** – Users can open the **⚙ RAG Settings** modal at any time to adjust:
+   - **Chunk Size** – number of characters per document chunk
+   - **Chunk Overlap** – overlap between consecutive chunks
+   - **Semantic Threshold** – minimum semantic similarity score
+   - **Top K** – number of chunks to retrieve
+   - **Similarity Threshold** – cutoff for vector similarity
+
+---
+
+## Third-Party Packages
+
+### Runtime Dependencies
+
+| Package                         | Why It's Used |
+| ------------------------------- | ------------- |
+| **react** / **react-dom** (v18) | Core UI library – component rendering, hooks, virtual DOM. |
+| **axios** (v1.x)               | Promise-based HTTP client for the backend REST API. Provides interceptors, automatic JSON parsing, and cleaner error handling over native `fetch`. |
+| **uuid** (v13)                  | Generates RFC-4122 v4 UUIDs for unique session IDs on the client side. |
+| **react-scripts** (v5)         | Create React App toolchain – bundles Webpack, Babel, ESLint, and dev-server config. |
+| **web-vitals**                  | Collects Core Web Vitals (LCP, FID, CLS) for performance monitoring. |
+
+### Dev Dependencies
+
+| Package                          | Why It's Used |
+| -------------------------------- | ------------- |
+| **typescript** (v4.9)            | Static type checking for better DX and fewer runtime bugs. |
+| **tailwindcss** (v3.4)           | Utility-first CSS framework with a custom neon/dark theme. |
+| **postcss** / **autoprefixer**   | PostCSS pipeline required by TailwindCSS to generate final CSS. |
+| **@types/react, react-dom, jest, node** | TypeScript type definitions for React, Jest, and Node.js APIs. |
+| **@testing-library/***           | Testing utilities for component-level unit tests. |
+
+---
+
+## Known Limitations / Future Improvements
+
+### Current Limitations
+
+| # | Limitation |
+|---|-----------|
+| 1 | **Single-document sessions** – Each session supports only one uploaded document; uploading a new file replaces the previous one. |
+| 2 | **No authentication** – No user auth/authz; anyone with the URL can use the app. |
+| 3 | **Hardcoded backend URL** – `http://localhost:5000` is hardcoded in `api.ts`, making multi-environment deployment cumbersome. |
+| 4 | **No streaming responses** – Bot replies arrive only after the full response is generated; no token-by-token streaming. |
+| 5 | **Limited error feedback** – Errors surface via `alert()` dialogs instead of inline notifications. |
+| 6 | **No markdown rendering** – Bot answers are rendered as plain text; code blocks, lists, etc. are not formatted. |
+
+### Future Improvements
+
+| # | Improvement |
+|---|------------|
+| 1 | **Environment-based config** – Use `.env` / `REACT_APP_API_URL` for flexible deployments. |
+| 2 | **Streaming / SSE** – Stream LLM responses token-by-token for a more responsive UX. |
+| 3 | **Multi-document support** – Query across multiple documents in a single session. |
+| 4 | **Authentication** – Add OAuth / JWT so sessions are tied to authenticated users. |
+| 5 | **Markdown rendering** – Use `react-markdown` to render rich-text bot responses. |
+| 6 | **Toast notifications** – Replace `alert()` with a toast system (e.g. `react-hot-toast`). |
+| 7 | **Chat history search** – Search across past conversations. |
+| 8 | **Theme toggle** – Dark / light mode switcher. |
+| 9 | **Mobile-responsive layout** – Better UX on smaller screens and touch devices. |
+| 10 | **Typing indicator** – Animated "bot is typing…" while waiting for a response. |
