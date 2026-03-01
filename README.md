@@ -144,22 +144,15 @@ Users can fine-tune retrieval parameters at any time via the **⚙ RAG Settings*
 |---|-----------|
 | 1 | **Single-document sessions** – Each session supports only one uploaded document; uploading a new file replaces the previous one. |
 | 2 | **No authentication** – No user auth/authz; anyone with the URL can use the app. |
-| 3 | **Hardcoded backend URL** – `http://localhost:5000` is hardcoded in `api.ts`, making multi-environment deployment cumbersome. |
-| 4 | **No streaming responses** – Bot replies arrive only after the full response is generated; no token-by-token streaming. |
-| 5 | **Limited error feedback** – Errors surface via `alert()` dialogs instead of inline notifications. |
-| 6 | **No markdown rendering** – Bot answers are rendered as plain text; code blocks, lists, etc. are not formatted. |
+| 3 | **No markdown rendering** – Bot answers are rendered as plain text; code blocks, lists, etc. are not formatted. |
 
 ### Future Improvements
 
 | # | Improvement |
 |---|------------|
 | 1 | **Environment-based config** – Use `.env` / `REACT_APP_API_URL` for flexible deployments. |
-| 2 | **Streaming / SSE** – Stream LLM responses token-by-token for a more responsive UX. |
-| 3 | **Multi-document support** – Query across multiple documents in a single session. |
-| 4 | **Authentication** – Add OAuth / JWT so sessions are tied to authenticated users. |
-| 5 | **Markdown rendering** – Use `react-markdown` to render rich-text bot responses. |
-| 6 | **Toast notifications** – Replace `alert()` with a toast system (e.g. `react-hot-toast`). |
-| 7 | **Chat history search** – Search across past conversations. |
-| 8 | **Theme toggle** – Dark / light mode switcher. |
-| 9 | **Mobile-responsive layout** – Better UX on smaller screens and touch devices. |
-| 10 | **Typing indicator** – Animated "bot is typing…" while waiting for a response. |
+| 2 | **Multi-document support** – Query across multiple documents in a single session. |
+| 3 | **Authentication** – Add OAuth / JWT so sessions are tied to authenticated users. |
+| 4 | **Chat history search** – Search across past conversations. |
+| 5 | **Theme toggle** – Dark / light mode switcher. |
+
