@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================
+   GLOBAL THEME
+===================================================== */
+body {
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* =====================================================
+   FLOATING BACKGROUND ORBS
+===================================================== */
+@keyframes floatDance {
+  0% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(3deg); }
+  50% { transform: translateY(0px) rotate(0deg); }
+  75% { transform: translateY(20px) rotate(-3deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+.float-dance {
+  animation: floatDance 8s ease-in-out infinite;
+}
+
+/* =====================================================
+   AI GRID BACKGROUND (Optional Use)
+===================================================== */
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 100px 100px; }
+}
+.ai-grid {
+  background-image:
+    linear-gradient(rgba(0,255,255,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,0,255,0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridMove 20s linear infinite;
+}
+
+/* =====================================================
+   RGB BORDER ANIMATION
+===================================================== */
+@keyframes rgbBorder {
+  0% { border-color: #00ffff; }
+  25% { border-color: #ff00ff; }
+  50% { border-color: #00ff88; }
+  75% { border-color: #ff0080; }
+  100% { border-color: #00ffff; }
+}
+.rgb-border {
+  animation: rgbBorder 4s linear infinite;
+}
+
+/* =====================================================
+   MESSAGE ENTRY ANIMATION
+===================================================== */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.message-animate {
+  animation: fadeSlideUp 0.4s ease forwards;
+}
+
+/* =====================================================
+   BUBBLE HOVER EFFECT
+===================================================== */
+@keyframes bubbleBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.bubble-bounce:hover {
+  animation: bubbleBounce 0.4s ease;
+}
+
+/* =====================================================
+   SHIMMER BUTTON EFFECT
+===================================================== */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer {
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0.1) 0%,
+    rgba(255,255,255,0.5) 50%,
+    rgba(255,255,255,0.1) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* =====================================================
+   GLOW PULSE
+===================================================== */
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+  50% { box-shadow: 0 0 25px rgba(255,0,255,0.6); }
+  100% { box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+}
+.glow-pulse {
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+/* =====================================================
+   WAITING RAG ORB ROTATION
+===================================================== */
+@keyframes rotateGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.ai-orb {
+  position: relative;
+}
+.ai-orb::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 9999px;
+  background: conic-gradient(cyan, magenta, lime, cyan);
+  animation: rotateGlow 6s linear infinite;
+  z-index: -1;
+  filter: blur(20px);
+}
+
+/* =====================================================
+   AI WAVE LOADER
+===================================================== */
+@keyframes wave {
+  0% { height: 6px; }
+  50% { height: 20px; }
+  100% { height: 6px; }
+}
+.ai-wave {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+}
+.ai-wave span {
+  width: 4px;
+  background: cyan;
+  border-radius: 4px;
+  animation: wave 1s infinite ease-in-out;
+}
+.ai-wave span:nth-child(2) { animation-delay: 0.1s; }
+.ai-wave span:nth-child(3) { animation-delay: 0.2s; }
+.ai-wave span:nth-child(4) { animation-delay: 0.3s; }
+
+/* =====================================================
+   SIDEBAR GLOW
+===================================================== */
+@keyframes sidebarGlow {
+  0% { box-shadow: 0 0 10px #00ffff; }
+  50% { box-shadow: 0 0 25px #ff00ff; }
+  100% { box-shadow: 0 0 10px #00ffff; }
+}
+.sidebar-glow {
+  animation: sidebarGlow 3s ease-in-out infinite;
+}
+
+/* =====================================================
+   SESSION HOVER LIFT
+===================================================== */
+@keyframes hoverLift {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+.hover-dance:hover {
+  animation: hoverLift 0.4s ease;
+}
+
+/* =====================================================
+   NEW CHAT BUTTON PULSE
+===================================================== */
+@keyframes pulseGlow {
+  0%,100% { box-shadow: 0 0 10px cyan; }
+  50% { box-shadow: 0 0 25px cyan; }
+}
+.pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+
+/* =====================================================
+   UPLOAD PROGRESS BAR SMOOTH
+===================================================== */
+.progress-bar {
+  transition: width 0.3s ease-in-out;
+}
+
+/* =====================================================
+   SMOOTH SCROLLBAR
+===================================================== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #00ffff, #ff00ff);
+  border-radius: 10px;
+}
+
+/* =====================================================
+   INPUT FOCUS GLOW
+===================================================== */
+input:focus {
+  box-shadow: 0 0 15px rgba(0,255,255,0.6);
+}
